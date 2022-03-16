@@ -1,0 +1,44 @@
+version: "2.0"
+
+services:
+  node:
+    image: thanhphongcpt/akash_avalanche
+    command:
+      - "/avalanchego/build/avalanchego --http-host 0.0.0.0"
+    expose:
+      - port: 9650
+        as: 9650
+        to:
+          - global: true
+      - port: 9651
+        as: 9651
+        to:
+          - global: true
+
+profiles:
+  compute:
+    node:
+      resources:
+        cpu:
+          units: 4
+        memory:
+          size: 6Gi
+        storage:
+          size: 120Gi
+  placement:
+    dcloud:
+      attributes:
+        host: akash
+      signedBy:
+        anyOf:
+
+      pricing:
+        node:
+          denom: uakt
+          amount: 100
+
+deployment:
+  node:
+    dcloud:
+      profile: node
+      count: 1
